@@ -2,7 +2,7 @@ terraform {
   backend "s3" {
     bucket         = "terrafomstatefile"
     key            = "terraform.tfstate"
-    region         = var.aws_region
+    region         = "eu-west-3"
     #dynamodb_table = "my-terraform-state-lock"
     encrypt        = true
   }
@@ -25,9 +25,25 @@ module "vpc" {
 
 
 
-module "ecs_cluster" {
-  source       = "./modules/ecs-cluster"
-  cluster_name = var.cluster_name
-  vpc_id       = module.vpc.vpc_id
-  subnets      = module.vpc.private_subnets
+//module "ecs_cluster" {
+  //source       = "./modules/ecs-cluster"
+  //cluster_name = var.cluster_name
+  //vpc_id       = module.vpc.vpc_id
+  //subnets      = module.vpc.private_subnets
+//}
+
+
+module "alb" {
+  source = "./modules/alb"
+  
+  alb_name              = var.alb_name
+  vpc_id                = module.vpc.vpc_id
+  public_subnets        = module.vpc.public_subnets
+  tg_name               = var.tg_name
+  tags                  = var.tags
+  healthy_threshold     = var.healthy_threshold
+  unhealthy_threshold   = var.unhealthy_threshold
+  timeout               = var.timeout
+  health_check_path     = var.health_check_path // the path inside the app
+  health_check_interval = var.health_check_interval
 }
