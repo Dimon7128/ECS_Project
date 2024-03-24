@@ -35,15 +35,34 @@ module "vpc" {
 
 module "alb" {
   source = "./modules/alb"
-  
   alb_name              = var.alb_name
   vpc_id                = module.vpc.vpc_id
   public_subnets        = module.vpc.public_subnets
   tg_name               = var.tg_name
-  tags                  = var.tags
+  tags_alb              = var.tags_alb
   healthy_threshold     = var.healthy_threshold
   unhealthy_threshold   = var.unhealthy_threshold
   timeout               = var.timeout
   health_check_path     = var.health_check_path // the path inside the app
   health_check_interval = var.health_check_interval
+}
+
+
+module "rds" {
+  source               = "./modules/rds"
+  allocated_storage    = var.allocated_storage
+  engine               = var.engine
+  engine_version       = var.engine_version
+  instance_class       = var.instance_class
+  db_identifier        = var.db_identifier
+  db_name              = var.db_name
+  db_username          = var.db_username
+  db_password          = var.db_password
+  parameter_group_name = var.parameter_group_name
+  subnet_ids           = module.vpc.private_subnets
+  vpc_id               = module.vpc.vpc_id
+  db_port              = var.db_port
+  cidr_blocks          = [var.cidr_block_private_A, var.cidr_block_private_B]     
+  multi_az             = var.multi_az
+  tags_rds             = var.tags_rds
 }

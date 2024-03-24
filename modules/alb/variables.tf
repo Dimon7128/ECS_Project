@@ -19,7 +19,7 @@ variable "tg_name" {
   type        = string
 }
 
-variable "tags" {
+variable "tags_alb" {
   description = "A map of tags to assign to the ALB and target group resources."
   type        = map(string)
 }

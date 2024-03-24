@@ -25,7 +25,7 @@ resource "aws_security_group" "alb_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = var.tags
+  tags = var.tags_alb
 }
 
 
@@ -37,7 +37,7 @@ resource "aws_lb" "alb" {
   subnets            = var.public_subnets
 
   enable_deletion_protection = false
-  tags = var.tags
+  tags = var.tags_alb
 }
 
 
@@ -57,7 +57,7 @@ resource "aws_lb_target_group" "tg" {
     interval            = var.health_check_interval
   }
 
-  tags = var.tags
+  tags = var.tags_alb
 }
 
 

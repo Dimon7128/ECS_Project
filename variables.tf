@@ -54,7 +54,7 @@ variable "tg_name" {
 
 }
 
-variable "tags" {
+variable "tags_alb" {
   description = "A map of tags to assign to the ALB and target group"
   type        = map(string)
   default     = {}
@@ -87,4 +87,58 @@ variable "health_check_interval" {
   description = "The approximate amount of time, in seconds, between health checks of an individual target."
   type        = number
   default     = 30
+}
+
+variable "allocated_storage" {
+  description = "The allocated storage in gigabytes for the RDS instance."
+}
+
+variable "engine" {
+  description = "The database engine to use."
+}
+
+variable "engine_version" {
+  description = "The engine version to use."
+}
+
+variable "instance_class" {
+  description = "The instance type of the RDS instance."
+}
+
+variable "db_identifier" {
+  description = "The identifier for the RDS instance."
+}
+
+variable "db_name" {
+  description = "The name for the RDS database."
+}
+
+variable "db_username" {
+  description = "Username for the RDS database."
+}
+
+variable "db_password" {
+  description = "Password for the RDS database."
+}
+
+variable "parameter_group_name" {
+  description = "The name of the parameter group to associate with this RDS instance."
+}
+
+
+variable "db_port" {
+  description = "The port on which the database accepts connections."
+}
+
+
+variable "multi_az" {
+  description = "Specifies if the RDS instance is multi-AZ."
+  type        = bool
+  default     = false
+}
+
+variable "tags_rds" {
+  description = "A map of tags to assign to the resource."
+  type        = map(string)
+  default     = {}
 }
