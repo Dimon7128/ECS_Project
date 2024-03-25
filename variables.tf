@@ -158,16 +158,6 @@ variable "backend_image" {
   type        = string
 }
 
-variable "execution_role_arn" {
-  description = "ARN of the IAM role that ECS tasks assume for AWS service access."
-  type        = string
-}
-
-variable "security_group_id" {
-  description = "Security group ID to be assigned to ECS tasks."
-  type        = string
-}
-
 variable "nginx_target_group_arn" {
   description = "ARN of the target group for the NGINX service in the ALB."
   type        = string

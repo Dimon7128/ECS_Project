@@ -28,11 +28,6 @@ variable "subnets" {
   type        = list(string)
 }
 
-variable "security_group_id" {
-  description = "The ID of the security group associated with the ECS tasks."
-  type        = string
-}
-
 variable "nginx_target_group_arn" {
   description = "The ARN of the target group for the NGINX service."
   type        = string

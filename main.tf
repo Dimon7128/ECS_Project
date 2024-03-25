@@ -66,17 +66,23 @@ module "rds" {
   multi_az             = var.multi_az
   tags_rds             = var.tags_rds
 }
+module "iam" {
+  source     = "./modules/iam"
+  environment = "production" # Or any other environment name
+}
+
 
 module "ecs_cluster" {
+
   source            = "./modules/ecs-cluster"
   cluster_name      = var.cluster_name
   nginx_image       = var.nginx_image
   backend_image     = var.backend_image
-  execution_role_arn= var.execution_role_arn
+  execution_role_arn= module.iam.ecs_task_execution_role_arn
   database_url      = module.rds.db_connection_url
   subnets           = module.vpc.private_subnets
   vpc_id            = module.vpc.vpc_id
   alb_sg            = module.alb.alb_sg
-  security_group_id = var.security_group_id           
-  nginx_target_group_arn = var.nginx_target_group_arn
+  nginx_target_group_arn = var.nginx_target_group_arn 
+  
 }

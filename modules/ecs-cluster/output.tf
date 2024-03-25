@@ -17,3 +17,6 @@ output "nginx_service_name" {
 output "backend_service_name" {
   value = aws_ecs_service.backend.name
 }
+output "sg_of_task" {
+    value = aws_security_group.ecs_tasks_sg.id
+}

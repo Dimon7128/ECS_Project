@@ -2,6 +2,36 @@ resource "aws_ecs_cluster" "cluster" {
   name = var.cluster_name
 }
 
+resource "aws_security_group" "ecs_tasks_sg" {
+  name        = "ecs-tasks-sg"
+  description = "Security group for ECS tasks"
+  vpc_id      = var.vpc_id
+
+  # Allow inbound HTTP from the ALB to NGINX
+  ingress {
+    from_port       = 80
+    to_port         = 80
+    protocol        = "tcp"
+    security_groups = [var.alb_sg]
+  }
+
+  # Allow internal communication on port 12345
+  ingress {
+    from_port   = 12345
+    to_port     = 12345
+    protocol    = "tcp"
+    self        = true
+  }
+
+  # Outbound rules allowing access to RDS and internet
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
 resource "aws_ecs_task_definition" "nginx" {
   family                   = "nginx"
   network_mode             = "awsvpc"
@@ -62,8 +92,8 @@ resource "aws_ecs_service" "nginx" {
 
   network_configuration {
     subnets         = var.subnets
-    assign_public_ip = true
-    security_groups = [var.security_group_id]
+    assign_public_ip = false
+    security_groups = [aws_security_group.ecs_tasks_sg.id]
   }
 
   load_balancer {
@@ -83,37 +113,9 @@ resource "aws_ecs_service" "backend" {
   network_configuration {
     subnets         = var.subnets
     assign_public_ip = true
-    security_groups = [var.security_group_id]
+    security_groups = [aws_security_group.ecs_tasks_sg.id]
   }
 }
 
-resource "aws_security_group" "ecs_tasks_sg" {
-  name        = "ecs-tasks-sg"
-  description = "Security group for ECS tasks"
-  vpc_id      = var.vpc_id
 
-  # Allow inbound HTTP from the ALB to NGINX
-  ingress {
-    from_port       = 80
-    to_port         = 80
-    protocol        = "tcp"
-    security_groups = [var.alb_sg]
-  }
-
-  # Allow internal communication on port 12345
-  ingress {
-    from_port   = 12345
-    to_port     = 12345
-    protocol    = "tcp"
-    self        = true
-  }
-
-  # Outbound rules allowing access to RDS and internet
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
 
