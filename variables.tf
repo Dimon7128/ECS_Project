@@ -142,3 +142,33 @@ variable "tags_rds" {
   type        = map(string)
   default     = {}
 }
+
+variable "cluster_name" {
+  description = "Name of the ECS cluster where services will be deployed."
+  type        = string
+}
+
+variable "nginx_image" {
+  description = "Docker image to use for the NGINX service in the ECS cluster."
+  type        = string
+}
+
+variable "backend_image" {
+  description = "Docker image to use for the backend application service in the ECS cluster."
+  type        = string
+}
+
+variable "execution_role_arn" {
+  description = "ARN of the IAM role that ECS tasks assume for AWS service access."
+  type        = string
+}
+
+variable "security_group_id" {
+  description = "Security group ID to be assigned to ECS tasks."
+  type        = string
+}
+
+variable "nginx_target_group_arn" {
+  description = "ARN of the target group for the NGINX service in the ALB."
+  type        = string
+}
