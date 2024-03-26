@@ -1,4 +1,6 @@
 variable "environment" {
-  description = "Deployment environment for the IAM role"
+  description = "The deployment environment"
   type        = string
 }
+
+// You can add other variables as needed

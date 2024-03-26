@@ -158,7 +158,3 @@ variable "backend_image" {
   type        = string
 }
 
-variable "nginx_target_group_arn" {
-  description = "ARN of the target group for the NGINX service in the ALB."
-  type        = string
-}
