@@ -68,7 +68,7 @@ resource "aws_ecs_task_definition" "backend" {
 
   container_definitions = jsonencode([
     {
-      name      = "backend"
+      name      = "backend-service"
       image     = var.backend_image
       cpu       = 256
       memory    = 512
@@ -112,7 +112,7 @@ resource "aws_ecs_service" "backend" {
 
   network_configuration {
     subnets         = var.subnets
-    assign_public_ip = true
+    assign_public_ip = false
     security_groups = [aws_security_group.ecs_tasks_sg.id]
   }
 }
