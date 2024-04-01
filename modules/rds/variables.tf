@@ -15,6 +15,12 @@ variable "instance_class" {
   description = "The instance type of the RDS instance."
 }
 
+variable "role_lambda" {
+  description = "The role to lambda function that aloows to run query in the rds"
+  type = string
+  
+}
+
 variable "db_identifier" {
   description = "The identifier for the RDS instance."
 }

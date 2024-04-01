@@ -8,6 +8,7 @@ terraform {
   }
 }
 
+
 provider "aws" {
   region = var.aws_region
 }
@@ -65,6 +66,8 @@ module "rds" {
   cidr_blocks          = [var.cidr_block_private_A, var.cidr_block_private_B]     
   multi_az             = var.multi_az
   tags_rds             = var.tags_rds
+  role_lambda          = module.iam.lambda_exec_role_arn
+
 }
 module "iam" {
   source     = "./modules/iam"
@@ -86,3 +89,15 @@ module "ecs_cluster" {
   nginx_target_group_arn = module.alb.target_group_arn
   
 }
+
+module "lambda_rds_query" {
+  source          = "./modules/lambda"
+  s3_bucket       = "s3://lambda-functions12/table-rds/"
+  s3_key          = "my-lambda.zip"
+  lambda_role_arn = module.iam.lambda_exec_role_arn # Assuming you have an IAM module outputting this
+  rds_host        = module.rds.db_instance_id # Assuming you have an RDS module outputting this
+  db_username     = var.db_username
+  db_password     = var.db_password
+  db_name         = var.db_name
+}
+

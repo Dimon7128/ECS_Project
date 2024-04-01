@@ -14,6 +14,9 @@ resource "aws_db_instance" "default" {
   multi_az               = var.multi_az
 
   tags = var.tags_rds
+   provisioner "local-exec" {
+    command = "mysql -h ${self.address} -u ${var.db_username} -p'${var.db_password}' -D ${var.db_name} -e 'CREATE TABLE table_name (id INT PRIMARY KEY, name VARCHAR(255));'"
+  }
 }
 
 resource "aws_db_subnet_group" "default" {
@@ -21,10 +24,12 @@ resource "aws_db_subnet_group" "default" {
   subnet_ids = var.subnet_ids
 }
 
+
 resource "aws_security_group" "db_sg" {
   name        = "${var.db_identifier}-sg"
   description = "Managed by Terraform for RDS instance"
   vpc_id      = var.vpc_id
+
 
   ingress {
     from_port   = var.db_port
