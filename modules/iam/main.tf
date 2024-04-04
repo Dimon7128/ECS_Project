@@ -25,6 +25,7 @@ resource "aws_iam_role_policy" "ecs_tasks_policy" {
       {
         Effect = "Allow",
         Action = [
+          // Existing ECR permissions
           "ecr:GetAuthorizationToken",
           "ecr:BatchCheckLayerAvailability",
           "ecr:GetDownloadUrlForLayer",
@@ -33,9 +34,20 @@ resource "aws_iam_role_policy" "ecs_tasks_policy" {
           "ecr:ListImages",
           "ecr:DescribeImages",
           "ecr:BatchGetImage",
+
+          // Existing CloudWatch Logs permissions
           "logs:CreateLogStream",
           "logs:PutLogEvents",
-          // Add other ECS and necessary AWS service permissions
+
+          // RDS permissions
+          "rds-db:connect", // if using RDS IAM authentication
+          "rds:*", // or specific RDS actions as needed
+
+          // ECS permissions if needed
+          "ecs:Describe*",
+          "ecs:List*",
+
+          // Add other permissions as needed
         ],
         Resource = "*",
       },
@@ -62,6 +74,12 @@ resource "aws_iam_role" "lambda_exec_role" {
   tags = {
     Environment = var.environment
   }
+}
+
+
+resource "aws_iam_role_policy_attachment" "lambda_logs" {
+  role       = aws_iam_role.lambda_exec_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
 resource "aws_iam_role_policy" "lambda_exec_policy" {

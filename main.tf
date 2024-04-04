@@ -82,22 +82,25 @@ module "ecs_cluster" {
   nginx_image            = var.nginx_image
   backend_image          = var.backend_image
   execution_role_arn     = module.iam.ecs_tasks_role_arn
-  database_url           = module.rds.db_connection_url
+  database_url           = module.rds.db_instance_endpoint
   subnets                = module.vpc.private_subnets
   vpc_id                 = module.vpc.vpc_id
   alb_sg                 = module.alb.alb_sg
   nginx_target_group_arn = module.alb.target_group_arn
+  aws_region             = var.aws_region
   
 }
 
 module "lambda_rds_query" {
   source          = "./modules/lambda"
-  s3_bucket       = "s3://lambda-functions12/table-rds/"
-  s3_key          = "my-lambda.zip"
+  s3_bucket       = "lambda-functions12"
+  s3_key          = "table-rds/lambda_function.zip"
   lambda_role_arn = module.iam.lambda_exec_role_arn # Assuming you have an IAM module outputting this
-  rds_host        = module.rds.db_instance_id # Assuming you have an RDS module outputting this
+  rds_host        = module.rds.db_instance_endpoint # Assuming you have an RDS module outputting this
   db_username     = var.db_username
   db_password     = var.db_password
   db_name         = var.db_name
+  subnets         = module.vpc.private_subnets
+  rds_sg          = module.rds.rds_sg
 }
 

@@ -157,3 +157,4 @@ variable "backend_image" {
   description = "Docker image to use for the backend application service in the ECS cluster."
   type        = string
 }
+

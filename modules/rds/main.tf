@@ -13,10 +13,7 @@ resource "aws_db_instance" "default" {
   skip_final_snapshot    = true
   multi_az               = var.multi_az
 
-  tags = var.tags_rds
-   provisioner "local-exec" {
-    command = "mysql -h ${self.address} -u ${var.db_username} -p'${var.db_password}' -D ${var.db_name} -e 'CREATE TABLE table_name (id INT PRIMARY KEY, name VARCHAR(255));'"
-  }
+  
 }
 
 resource "aws_db_subnet_group" "default" {

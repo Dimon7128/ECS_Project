@@ -32,3 +32,14 @@ variable "db_name" {
   description = "Name of the database."
   type        = string
 }
+
+variable "subnets" {
+  description = "Private subnets where is rds configured"
+  type        = list(string)
+}
+
+variable "rds_sg" {
+  description = "The sg of the rds"
+  type        =  list(string)
+}
+ 

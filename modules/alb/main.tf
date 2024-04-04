@@ -48,13 +48,15 @@ resource "aws_lb_target_group" "tg" {
   vpc_id   = var.vpc_id
   target_type = "ip" 
   health_check {
+    enabled             = true
+    interval            = var.health_check_interval
     healthy_threshold   = var.healthy_threshold
     unhealthy_threshold = var.unhealthy_threshold
     timeout             = var.timeout
     path                = var.health_check_path
+    port                = "80"
     protocol            = "HTTP"
     matcher             = "200"
-    interval            = var.health_check_interval
   }
 
   tags = var.tags_alb

@@ -41,3 +41,8 @@ variable "alb_sg" {
   description = "The ID of the sg of the alb"
   type = string
 }
+
+variable "aws_region" {
+  description = "The Region"
+  type = string
+}
