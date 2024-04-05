@@ -88,7 +88,9 @@ module "ecs_cluster" {
   alb_sg                 = module.alb.alb_sg
   nginx_target_group_arn = module.alb.target_group_arn
   aws_region             = var.aws_region
-  
+  rds_db_name            = var.db_name    
+  rds_password           = var.db_password  
+  rds_username           = var.db_username
 }
 
 module "lambda_rds_query" {

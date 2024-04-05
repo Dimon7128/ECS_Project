@@ -56,6 +56,24 @@ resource "aws_ecs_task_definition" "my_app" {
       cpu   = 256,
       memory = 512,
       essential = true,
+      environment = [
+      {
+        name  = "RDS_HOST"
+        value = var.database_url
+      },
+      {
+        name  = "RDS_USER"
+        value = var.rds_username
+      },
+      {
+        name  = "RDS_PASSWORD"
+        value = var.rds_password
+      },
+      {
+        name  = "RDS_DB"
+        value = var.rds_db_name
+      }
+    ]
       portMappings = [
         {
           containerPort = 80,

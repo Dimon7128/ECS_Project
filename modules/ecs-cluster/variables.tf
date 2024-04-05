@@ -46,3 +46,17 @@ variable "aws_region" {
   description = "The Region"
   type = string
 }
+variable "rds_db_name" {
+  description = "The Region"
+  type = string
+}
+
+variable "rds_password" {
+  description = "The Region"
+  type = string
+}
+
+variable "rds_username" {
+  description = "The Region"
+  type = string
+}
