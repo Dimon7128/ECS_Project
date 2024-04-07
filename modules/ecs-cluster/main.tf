@@ -25,7 +25,7 @@ resource "aws_security_group" "ecs_tasks_sg" {
     protocol    = "tcp"
     self        = true
   }
-  ingress {
+  egress {
     from_port   = 3306
     to_port     = 3306
     protocol    = "tcp"
@@ -56,24 +56,7 @@ resource "aws_ecs_task_definition" "my_app" {
       cpu   = 256,
       memory = 512,
       essential = true,
-      environment = [
-      {
-        name  = "RDS_HOST"
-        value = var.database_url
-      },
-      {
-        name  = "RDS_USER"
-        value = var.rds_username
-      },
-      {
-        name  = "RDS_PASSWORD"
-        value = var.rds_password
-      },
-      {
-        name  = "RDS_DB"
-        value = var.rds_db_name
-      }
-    ]
+      
       portMappings = [
         {
           containerPort = 80,
@@ -98,11 +81,23 @@ resource "aws_ecs_task_definition" "my_app" {
       memory = 512,
       essential = true,
       environment = [
-        {
-          name  = "DATABASE_URL",
-          value = var.database_url
-        }
-      ],
+      {
+        name  = "RDS_HOST"
+        value = var.rds_host
+      },
+      {
+        name  = "RDS_USER"
+        value = var.rds_username
+      },
+      {
+        name  = "RDS_PASSWORD"
+        value = var.rds_password
+      },
+      {
+        name  = "RDS_DB"
+        value = var.rds_db_name
+      }
+    ]
       portMappings = [
         {
           containerPort = 12345,

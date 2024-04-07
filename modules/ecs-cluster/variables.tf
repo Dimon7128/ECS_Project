@@ -18,7 +18,7 @@ variable "execution_role_arn" {
   type        = string
 }
 
-variable "database_url" {
+variable "rds_host" {
   description = "The URL for the database that the backend application will connect to."
   type        = string
 }

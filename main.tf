@@ -82,12 +82,12 @@ module "ecs_cluster" {
   nginx_image            = var.nginx_image
   backend_image          = var.backend_image
   execution_role_arn     = module.iam.ecs_tasks_role_arn
-  database_url           = module.rds.db_instance_endpoint
   subnets                = module.vpc.private_subnets
   vpc_id                 = module.vpc.vpc_id
   alb_sg                 = module.alb.alb_sg
   nginx_target_group_arn = module.alb.target_group_arn
   aws_region             = var.aws_region
+  rds_host               = module.rds.db_instance_endpoint
   rds_db_name            = var.db_name    
   rds_password           = var.db_password  
   rds_username           = var.db_username
