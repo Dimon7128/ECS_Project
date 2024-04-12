@@ -29,7 +29,7 @@ resource "aws_lambda_function" "rds_query_lambda" {
 
 resource "aws_lambda_function" "record_creator" {
   function_name = "Route53_record_creator"
-  handler       = "Route53_record_creator.lambda_handler" # name of the function in the s3 bucket (inside .zip)
+  handler       = "crete_dns_record.lambda_handler" # name of the function in the s3 bucket (inside .zip)
   s3_bucket     = var.s3_bucket
   s3_key        = var.s3_key_route53
   runtime       = "python3.8" # Or any supported runtime version
