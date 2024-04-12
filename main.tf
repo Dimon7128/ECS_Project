@@ -107,5 +107,6 @@ module "lambda_rds_query" {
   subnets                 = module.vpc.private_subnets
   rds_sg                  = module.rds.rds_sg
   alb_zone_id             = module.alb.alb_zone_id
+  alb_dns_name            = module.alb_dns_name
 }
 

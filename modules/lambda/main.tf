@@ -39,6 +39,7 @@ resource "aws_lambda_function" "record_creator" {
   environment {
     variables = {
       ALB_ZONE_ID = var.alb_zone_id
+      ALB_DNS_NAME = var.alb_dns_name
     }
   }
 
