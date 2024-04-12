@@ -157,3 +157,19 @@ variable "backend_image" {
   description = "Docker image to use for the backend application service in the ECS cluster."
   type        = string
 }
+
+variable "s3_bucket" {
+  description = "The name of the S3 bucket containing the Lambda function code."
+  type        = string
+}
+
+variable "s3_key_rds" {
+  description = "The S3 key of the Lambda function's deployment package for func that creates the table in the rds."
+  type        = string
+}
+
+variable "s3_key_route53" {
+  description = "The S3 key of the Lambda function's deployment package for the func that creates record in route 53."
+  type        = string
+}
+

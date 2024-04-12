@@ -3,15 +3,26 @@ variable "s3_bucket" {
   type        = string
 }
 
-variable "s3_key" {
+variable "s3_key_rds" {
   description = "The S3 key of the Lambda function's deployment package."
   type        = string
 }
 
-variable "lambda_role_arn" {
-  description = "The ARN of the IAM role that Lambda will assume."
+variable "s3_key_route53" {
+  description = "The S3 key of the Lambda function's deployment package."
   type        = string
 }
+
+variable "lambda_role_arn_rds" {
+  description = "The ARN of the IAM role that Lambda for rds query will assume."
+  type        = string
+}
+
+variable "lambda_role_arn_route53"{
+  description = "The ARN of the IAM role that Lambda for route53 will assume."
+  type        = string
+}
+
 
 variable "rds_host" {
   description = "Hostname for the RDS instance."
@@ -43,3 +54,7 @@ variable "rds_sg" {
   type        =  list(string)
 }
  
+variable "my_alb_zone_id" {
+  description = "The Zone ID of the ALB"
+  type        = string
+}
