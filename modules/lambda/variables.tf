@@ -54,7 +54,7 @@ variable "rds_sg" {
   type        =  list(string)
 }
  
-variable "my_alb_zone_id" {
+variable "alb_zone_id" {
   description = "The Zone ID of the ALB"
   type        = string
 }

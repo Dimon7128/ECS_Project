@@ -38,7 +38,7 @@ resource "aws_lambda_function" "record_creator" {
 
   environment {
     variables = {
-      ALB_ZONE_ID = aws_lb.my_alb.zone_id
+      ALB_ZONE_ID = var.alb_zone_id
     }
   }
 

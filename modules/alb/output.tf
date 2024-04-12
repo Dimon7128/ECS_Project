@@ -14,5 +14,5 @@ output "alb_sg" {
 }
 
 output "alb_zone_id" {
-  value = aws_lb.my_alb.zone_id
+  value = aws_lb.alb.zone_id
 }

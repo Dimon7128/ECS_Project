@@ -66,7 +66,7 @@ module "rds" {
   cidr_blocks          = [var.cidr_block_private_A, var.cidr_block_private_B]     
   multi_az             = var.multi_az
   tags_rds             = var.tags_rds
-  role_lambda          = module.iam.lambda_exec_role_arn
+  role_lambda          = module.iam.lambda_rds
 
 }
 module "iam" {
@@ -106,6 +106,6 @@ module "lambda_rds_query" {
   db_name                 = var.db_name
   subnets                 = module.vpc.private_subnets
   rds_sg                  = module.rds.rds_sg
-  my_alb_zone_id          = module.alb.my_alb_zone_id
+  alb_zone_id             = module.alb.alb_zone_id
 }
 
