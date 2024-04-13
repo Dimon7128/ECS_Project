@@ -20,3 +20,7 @@ output "ecs_cluster_id" {
 output "sg_of_task" {
     value = aws_security_group.ecs_tasks_sg.id
 }
+
+output "ecs_service_id" {
+  value = aws_ecs_service.my_app.id
+}

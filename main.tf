@@ -93,7 +93,7 @@ module "ecs_cluster" {
   rds_username           = var.db_username
 }
 
-module "lambda_rds_query" {
+module "lambda" {
   source                  = "./modules/lambda"
   s3_bucket               = var.s3_bucket
   s3_key_rds              = var.s3_key_rds
@@ -107,6 +107,27 @@ module "lambda_rds_query" {
   subnets                 = module.vpc.private_subnets
   rds_sg                  = module.rds.rds_sg
   alb_zone_id             = module.alb.alb_zone_id
-  alb_dns_name            = module.alb_dns_name
+  alb_dns_name            = module.alb.alb_dns_name
 }
 
+resource "null_resource" "invoke_lambda_after_creation" {
+  # Depends on both the ECS service and Lambda functions being created
+  depends_on = [
+    module.ecs_cluster,
+    module.lambda,
+    # Add any other Lambda functions here
+  ]
+    triggers = {
+    ecs_service_id = module.ecs_cluster.ecs_service_id
+    lambda_rds_arn = module.lambda.lambda_function_arn_rds
+    lambda_route53_arn = module.lambda.lambda_function_arn_route53
+  }
+
+  provisioner "local-exec" {
+    interpreter = ["bash", "-c"]
+    command = <<-EOT
+      aws lambda invoke --function-name ${module.lambda.lambda_function_name_rds} --payload '{"key": "value"}' response_rds.json
+      aws lambda invoke --function-name ${module.lambda.lambda_function_name_route53} --payload '{"key": "value"}' response_route53.json
+    EOT
+  }
+}
