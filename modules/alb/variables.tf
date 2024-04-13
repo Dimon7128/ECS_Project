@@ -48,3 +48,9 @@ variable "health_check_interval" {
   description = "The approximate amount of time, in seconds, between health checks of an individual target."
   type        = number
 }
+
+
+variable "zone_id" {
+  description = "zone id of the route53."
+  type        = string
+}

@@ -4,12 +4,6 @@ resource "aws_security_group" "alb_sg" {
   description = "Security group for ALB allowing ports 80 and 443"
   vpc_id      = var.vpc_id
 
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
 
   ingress {
     from_port   = 443
@@ -73,3 +67,68 @@ resource "aws_lb_listener" "listener" {
     target_group_arn = aws_lb_target_group.tg.arn
   }
 }
+
+resource "aws_acm_certificate" "my_cert" {
+  domain_name       = "dimabuapp.cloud"
+  validation_method = "DNS"
+
+  tags = {
+    Name = "my_domain_certificate"
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_route53_record" "cert_validation" {
+  for_each = {
+    for dvo in aws_acm_certificate.my_cert.domain_validation_options : dvo.domain_name => {
+      name  = dvo.resource_record_name
+      type  = dvo.resource_record_type
+      value = dvo.resource_record_value
+    }
+  }
+
+  name    = each.value.name
+  type    = each.value.type
+  records = [each.value.value]
+  ttl     = 60
+  zone_id = var.zone_id
+}
+
+resource "aws_acm_certificate_validation" "my_cert_validation" {
+  for_each            = aws_route53_record.cert_validation
+
+  certificate_arn     = aws_acm_certificate.my_cert.arn
+  validation_record_fqdns = [each.value.fqdn]
+
+  depends_on = [aws_route53_record.cert_validation]
+}
+
+
+resource "aws_lb_listener" "https" {
+  load_balancer_arn = aws_lb.alb.arn
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  certificate_arn   = aws_acm_certificate.my_cert.arn
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.tg.arn
+  }
+}
+
+resource "aws_route53_record" "alb_record" {
+  zone_id = var.zone_id
+  name    = "dimabuapp.cloud"
+  type    = "A"
+
+  alias {
+    name                   = aws_lb.alb.dns_name
+    zone_id                = aws_lb.alb.zone_id
+    evaluate_target_health = true
+  }
+}
+

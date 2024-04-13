@@ -173,3 +173,7 @@ variable "s3_key_route53" {
   type        = string
 }
 
+variable "route53_zone_id" {
+  description = "Zone ID of the route53 - the question is how i should to retrive it from aws, or better create it from zero...?"
+  type        = string
+}
