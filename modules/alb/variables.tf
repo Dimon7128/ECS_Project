@@ -54,3 +54,7 @@ variable "zone_id" {
   description = "zone id of the route53."
   type        = string
 }
+variable "domain_name" {
+  description = "the domain name that will be the endpoint to the static app."
+  type        = string
+}

@@ -177,3 +177,8 @@ variable "route53_zone_id" {
   description = "Zone ID of the route53 - the question is how i should to retrive it from aws, or better create it from zero...?"
   type        = string
 }
+
+variable "domain_name" {
+  description = "domain name"
+  type        = string
+}

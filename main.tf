@@ -47,6 +47,7 @@ module "alb" {
   health_check_path     = var.health_check_path // the path inside the app
   health_check_interval = var.health_check_interval
   zone_id               = var.route53_zone_id
+  domain_name           = var.domain_name
 }
 
 

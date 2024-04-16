@@ -69,7 +69,7 @@ resource "aws_lb_listener" "listener" {
 }
 
 resource "aws_acm_certificate" "my_cert" {
-  domain_name       = "dimabuapp.cloud"
+  domain_name       = var.domain_name
   validation_method = "DNS"
 
   tags = {
@@ -122,7 +122,7 @@ resource "aws_lb_listener" "https" {
 
 resource "aws_route53_record" "alb_record" {
   zone_id = var.zone_id
-  name    = "dimabuapp.cloud"
+  name    = var.domain_name
   type    = "A"
 
   alias {
