@@ -55,6 +55,7 @@ resource "aws_iam_role_policy" "ecs_tasks_policy" {
   })
 }
 
+
 resource "aws_iam_role" "lambda_rds" {
   name = "lambda-exec-role-${var.environment}"
 
@@ -104,51 +105,4 @@ resource "aws_iam_role_policy" "lambda_exec_policy" {
       },
     ],
   })
-}
-resource "aws_iam_role" "lambda_route53" {
-  name = "lambda-route53-role-${var.environment}"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Effect = "Allow",
-        Principal = {
-          Service = "lambda.amazonaws.com"
-        },
-        Action = "sts:AssumeRole",
-      },
-    ],
-  })
-
-  tags = {
-    Environment = var.environment
-  }
-}
-
-resource "aws_iam_role_policy" "lambda_route53_policy" {
-  name = "lambda-route53-policy-${var.environment}"
-  role = aws_iam_role.lambda_route53.id
-
-  policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Effect = "Allow",
-        Action = [
-          "route53:ChangeResourceRecordSets",
-          // EC2 permissions for Lambda functions within a VPC
-          "ec2:CreateNetworkInterface",
-          "ec2:DescribeNetworkInterfaces",
-          "ec2:DeleteNetworkInterface"
-        ],
-        Resource = "*"
-      },
-    ],
-  })
-}
-
-resource "aws_iam_role_policy_attachment" "lambda_route53_logs" {
-  role       = aws_iam_role.lambda_route53.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }

@@ -50,11 +50,12 @@ variable "health_check_interval" {
 }
 
 
-variable "zone_id" {
-  description = "zone id of the route53."
+variable "domain_name" {
+  description = "the domain name that will be the endpoint to the static app."
   type        = string
 }
-variable "domain_name" {
+
+variable "zone_id" {
   description = "the domain name that will be the endpoint to the static app."
   type        = string
 }

@@ -67,7 +67,6 @@ resource "aws_lb_listener" "listener" {
     target_group_arn = aws_lb_target_group.tg.arn
   }
 }
-
 resource "aws_acm_certificate" "my_cert" {
   domain_name       = var.domain_name
   validation_method = "DNS"
@@ -81,32 +80,46 @@ resource "aws_acm_certificate" "my_cert" {
   }
 }
 
+# DNS records for ACM validation (assuming you have an existing zone ID)
 resource "aws_route53_record" "cert_validation" {
   for_each = {
     for dvo in aws_acm_certificate.my_cert.domain_validation_options : dvo.domain_name => {
-      name  = dvo.resource_record_name
-      type  = dvo.resource_record_type
-      value = dvo.resource_record_value
+      name   = dvo.resource_record_name
+      type   = dvo.resource_record_type
+      record = dvo.resource_record_value
     }
   }
 
+  zone_id = var.zone_id  # Replace with your actual existing hosted zone ID
   name    = each.value.name
   type    = each.value.type
-  records = [each.value.value]
+  records = [each.value.record]
   ttl     = 60
-  zone_id = var.zone_id
 }
 
+# ACM certificate validation
 resource "aws_acm_certificate_validation" "my_cert_validation" {
-  for_each            = aws_route53_record.cert_validation
+  for_each = aws_route53_record.cert_validation
 
-  certificate_arn     = aws_acm_certificate.my_cert.arn
+  certificate_arn         = aws_acm_certificate.my_cert.arn
   validation_record_fqdns = [each.value.fqdn]
-
-  depends_on = [aws_route53_record.cert_validation]
+  depends_on              = [aws_route53_record.cert_validation]
 }
 
+# DNS A record for the ALB (also assuming you have an existing zone ID)
+resource "aws_route53_record" "alb_record" {
+  zone_id = var.zone_id  # Replace with your actual existing hosted zone ID
+  name    = var.domain_name
+  type    = "A"
 
+  alias {
+    name                   = aws_lb.alb.dns_name
+    zone_id                = aws_lb.alb.zone_id
+    evaluate_target_health = true
+  }
+}
+
+# HTTPS listener for the ALB
 resource "aws_lb_listener" "https" {
   load_balancer_arn = aws_lb.alb.arn
   port              = "443"
@@ -119,16 +132,3 @@ resource "aws_lb_listener" "https" {
     target_group_arn = aws_lb_target_group.tg.arn
   }
 }
-
-resource "aws_route53_record" "alb_record" {
-  zone_id = var.zone_id
-  name    = var.domain_name
-  type    = "A"
-
-  alias {
-    name                   = aws_lb.alb.dns_name
-    zone_id                = aws_lb.alb.zone_id
-    evaluate_target_health = true
-  }
-}
-

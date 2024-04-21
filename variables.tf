@@ -158,27 +158,22 @@ variable "backend_image" {
   type        = string
 }
 
-variable "s3_bucket" {
-  description = "The name of the S3 bucket containing the Lambda function code."
-  type        = string
-}
-
-variable "s3_key_rds" {
-  description = "The S3 key of the Lambda function's deployment package for func that creates the table in the rds."
-  type        = string
-}
-
-variable "s3_key_route53" {
-  description = "The S3 key of the Lambda function's deployment package for the func that creates record in route 53."
-  type        = string
-}
-
-variable "route53_zone_id" {
-  description = "Zone ID of the route53 - the question is how i should to retrive it from aws, or better create it from zero...?"
-  type        = string
-}
-
 variable "domain_name" {
   description = "domain name"
+  type        = string
+}
+
+variable "zone_id" {
+  description = "Existing hosted zone"
+  type        = string
+}
+
+# variable "iam_rds_access" {
+#   description = "role policy to rds for access the s3"
+#   type        = string
+# }
+
+variable "s3_bucket" {
+  description = "s3 bucket where the zip file is placed."
   type        = string
 }

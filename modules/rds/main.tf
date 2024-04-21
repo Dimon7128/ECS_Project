@@ -1,3 +1,4 @@
+
 resource "aws_db_instance" "default" {
   allocated_storage      = var.allocated_storage
   engine                 = var.engine

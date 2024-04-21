@@ -3,4 +3,5 @@ variable "environment" {
   type        = string
 }
 
+
 // You can add other variables as needed

@@ -25,15 +25,6 @@ module "vpc" {
 }
 
 
-
-//module "ecs_cluster" {
-  //source       = "./modules/ecs-cluster"
-  //cluster_name = var.cluster_name
-  //vpc_id       = module.vpc.vpc_id
-  //subnets      = module.vpc.private_subnets
-//}
-
-
 module "alb" {
   source = "./modules/alb"
   alb_name              = var.alb_name
@@ -46,8 +37,12 @@ module "alb" {
   timeout               = var.timeout
   health_check_path     = var.health_check_path // the path inside the app
   health_check_interval = var.health_check_interval
-  zone_id               = var.route53_zone_id
   domain_name           = var.domain_name
+  zone_id               = var.zone_id
+}
+module "iam" {
+  source      = "./modules/iam"
+  environment = "production" # Or any other environment name
 }
 
 
@@ -68,14 +63,7 @@ module "rds" {
   cidr_blocks          = [var.cidr_block_private_A, var.cidr_block_private_B]     
   multi_az             = var.multi_az
   tags_rds             = var.tags_rds
-  role_lambda          = module.iam.lambda_rds
-
 }
-module "iam" {
-  source     = "./modules/iam"
-  environment = "production" # Or any other environment name
-}
-
 
 module "ecs_cluster" {
 
@@ -95,41 +83,53 @@ module "ecs_cluster" {
   rds_username           = var.db_username
 }
 
-module "lambda" {
-  source                  = "./modules/lambda"
-  s3_bucket               = var.s3_bucket
-  s3_key_rds              = var.s3_key_rds
-  s3_key_route53          = var.s3_key_route53
-  lambda_role_arn_rds     = module.iam.lambda_rds # Assuming you have an IAM module outputting this
-  lambda_role_arn_route53 = module.iam.lambda_route53
-  rds_host                = module.rds.db_instance_endpoint # Assuming you have an RDS module outputting this
-  db_username             = var.db_username
-  db_password             = var.db_password
-  db_name                 = var.db_name
-  subnets                 = module.vpc.private_subnets
-  rds_sg                  = module.rds.rds_sg
-  alb_zone_id             = module.alb.alb_zone_id
-  alb_dns_name            = module.alb.alb_dns_name
+
+resource "aws_lambda_function" "rds_query_lambda" {
+  function_name = "rds-query-function"
+  handler       = "create_table_func.lambda_handler" # name of the function in the s3 bucket (inside .zip)
+  s3_bucket     = var.s3_bucket
+  s3_key        = "lambda_function.zip"
+  runtime       = "python3.8" # Or any supported runtime version
+
+  role          = module.iam.lambda_function_arn_rds
+
+  environment {
+    variables = {
+      RDS_HOST    = module.rds.db_instance_endpoint
+      DB_USERNAME = var.db_username
+      DB_PASSWORD = var.db_password
+      DB_NAME     = var.db_name
+    }
+  }
+
+  vpc_config {
+    // Assuming your Lambda needs to be in both subnets for high availability
+    subnet_ids         = module.vpc.private_subnets
+    security_group_ids = module.rds.rds_sg
+  }
+
+  // Increase memory and timeout if necessary
+  memory_size = 256 # in MB
+  timeout     = 30  # in seconds
 }
+
 
 resource "null_resource" "invoke_lambda_after_creation" {
   # Depends on both the ECS service and Lambda functions being created
   depends_on = [
     module.ecs_cluster,
-    module.lambda,
+    module.rds,
     # Add any other Lambda functions here
   ]
     triggers = {
     ecs_service_id = module.ecs_cluster.ecs_service_id
-    lambda_rds_arn = module.lambda.lambda_function_arn_rds
-    lambda_route53_arn = module.lambda.lambda_function_arn_route53
+    # lambda_rds_arn = module.rds
   }
 
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
     command = <<-EOT
-      aws lambda invoke --function-name ${module.lambda.lambda_function_name_rds} --payload '{"key": "value"}' response_rds.json
-      aws lambda invoke --function-name ${module.lambda.lambda_function_name_route53} --payload '{"key": "value"}' response_route53.json
+      aws lambda invoke --function-name ${aws_lambda_function.rds_query_lambda.arn} --payload '{"key": "value"}' response_rds.json
     EOT
   }
 }
