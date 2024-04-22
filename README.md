@@ -118,7 +118,13 @@ timeout              = 5
 health_check_path    = "/"
 health_check_interval= 30
 ```
-and adjust the deafult values and env variable accordingly to your env and requirements.
+And adjust the deafult values and env variable accordingly to your env and requirements.
+
+3. Inizialize terraform and apply:
+```markdown
+terraform init
+terraform apply
+```
 
 
 
