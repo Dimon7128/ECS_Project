@@ -54,6 +54,21 @@ docker push <your-account-id>.dkr.ecr.<your-region>.amazonaws.com/my-backend-ima
 ```
 4. Repeat for the nginx image.
 
+## Usage
+
+To use this project, follow these steps:
+
+1. Clone this repository to your local repository
+```markdown
+git clone https://github.com/Dimon7128/ESC_Project.git
+```
+2.  Initialize Terraform:
+```markdown
+nano terraform.tfvars 
+```
+and adjust the deafult values and env variable accordingly to your env and requirements.
+
+
 
 ## Project Structure
 
@@ -67,8 +82,3 @@ docker push <your-account-id>.dkr.ecr.<your-region>.amazonaws.com/my-backend-ima
 - `outputs.tf` - Defines outputs after the Terraform apply is complete.
 - `README.md` - Provides information about the project and setup instructions.
 
-## Usage
-
-To use this project, follow these steps:
-
-1. Initialize Terraform:
