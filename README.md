@@ -11,7 +11,6 @@ The Terraform setup organizes resources into modules for clarity and maintainabi
 - **ALB (Application Load Balancer)**
 - **ECS Cluster**
 - **IAM (Identity and Access Management)**
-- **Lambda Functions**
 - **RDS (Relational Database Service)**
 - **VPC (Virtual Private Cloud)**
 
@@ -22,9 +21,39 @@ Each module is responsible for provisioning its respective AWS resources.
 Before running this Terraform project, ensure that you have the following:
 
 - Terraform v0.12.x or higher installed
+- Docker installed
 - AWS CLI configured with appropriate credentials
 - Adequate permissions to create the resources defined in the Terraform configurations
-- 
+- Amazon Route 53 Hosted Zone
+- Private ECR repository
+## Lambda Function:
+1. Navigate to the directory where you want to clone the repository.
+2. Run the git clone command with the URL of the repository:
+```markdown
+git clone https://github.com/Dimon7128/services.git
+```
+3. Upload the lambda_function.zip to s3 bucket.
+```markdown
+cd lambda
+aws s3 cp lambda_function.zip s3://your-bucket-name/
+```
+## Push Docker Images to private ECR:
+1. Create the backend docker image:
+```markdown
+cd backend
+docker build -t my-backend-image .
+```
+2. Authenticate with ECR:
+```markdown
+aws ecr get-login-password --region <your-region> | docker login --username AWS --password-stdin <your-account-id>.dkr.ecr.<your-region>.amazonaws.com
+```
+3. Tag and Push Docker Image:
+```markdown
+docker tag my-backend-image <your-account-id>.dkr.ecr.<your-region>.amazonaws.com/my-backend-image
+docker push <your-account-id>.dkr.ecr.<your-region>.amazonaws.com/my-backend-image
+```
+4. Repeat for the nginx image.
+
 
 ## Project Structure
 
@@ -33,7 +62,6 @@ Before running this Terraform project, ensure that you have the following:
   - `alb/` - Configures the Application Load Balancer.
   - `ecs-cluster/` - Sets up the ECS Cluster and associated services.
   - `iam/` - Manages IAM roles and policies for the ECS tasks and Lambda functions.
-  - `lambda/` - Contains Lambda function definitions and their triggers.
   - `rds/` - Provisions RDS instances and related configurations.
   - `vpc/` - Sets up the VPC, including subnets, route tables, and internet gateways.
 - `outputs.tf` - Defines outputs after the Terraform apply is complete.
