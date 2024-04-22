@@ -14,10 +14,11 @@ The Terraform setup organizes resources into modules for clarity and maintainabi
 - **RDS (Relational Database Service)**
 - **VPC (Virtual Private Cloud)**
 
-![Alt text](https://github.com/Dimon7128/ESC_Project/blob/main/Architecture.pdf)
-
 
 Each module is responsible for provisioning its respective AWS resources.
+
+## Diagram of the infrastructure:
+![image](https://github.com/Dimon7128/ESC_Project/assets/96005523/b426061f-c7b4-40ad-ac55-2183dbc2b488)
 
 ## Prerequisites
 
