@@ -42,7 +42,7 @@ cd lambda
 aws s3 cp lambda_function.zip s3://your-bucket-name/
 ```
 ## Push Docker Images to private ECR:
-1. Create the backend docker image:
+1. Create the backend Docker image:
 ```markdown
 cd backend
 docker build -t my-backend-image .
@@ -56,21 +56,22 @@ aws ecr get-login-password --region <your-region> | docker login --username AWS 
 docker tag my-backend-image <your-account-id>.dkr.ecr.<your-region>.amazonaws.com/my-backend-image
 docker push <your-account-id>.dkr.ecr.<your-region>.amazonaws.com/my-backend-image
 ```
-4. Repeat for the nginx image.
+4. Repeat for the Nginx image following the same steps.
 
 ## Usage
 
 To use this project, follow these steps:
 
-1. Clone this repository to your local repository
+1. Clone the repository and navigate to the project directory:
 ```markdown
 git clone https://github.com/Dimon7128/ESC_Project.git
+cd ESC_Project
 ```
-2.  Initialize Terraform:
+2.  Modify terraform.tfvars with the appropriate values:
 ```markdown
 nano terraform.tfvars
 ```
-And adjust the deafult values and env variable accordingly to your env and requirements.
+Update the variables in terraform.tfvars with the correct values for your environment.
 
 3. Inizialize terraform and apply:
 ```markdown
