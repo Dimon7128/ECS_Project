@@ -2,14 +2,14 @@
 
 # AWS Infrastructure Provisioning with Terraform
 
-This project provisions a full AWS infrastructure stack using Terraform, including load balancers, ECS cluster, IAM roles, Lambda functions, RDS instances, and VPC configurations. After infrastructure provisioning, two Lambda functions are invoked: one to create a table in RDS and another to create a DNS record in Route 53 and attach an ALB to it.
+This project provisions a full AWS infrastructure stack using Terraform, including load balancers, ECS cluster, IAM roles, Lambda functions, RDS instances, and VPC configurations. After infrastructure provisioning, Lambda functions are invoked, To create a table in RDS and insert a default value.
 
 ## Architecture Overview
 
 The Terraform setup organizes resources into modules for clarity and maintainability. The infrastructure consists of the following modules:
 
 - **ALB (Application Load Balancer)**
-- **ECS Cluster**
+- **ECS (Elastic Container Service) Cluster** 
 - **IAM (Identity and Access Management)**
 - **RDS (Relational Database Service)**
 - **VPC (Virtual Private Cloud)**
@@ -18,7 +18,7 @@ The Terraform setup organizes resources into modules for clarity and maintainabi
 Each module is responsible for provisioning its respective AWS resources.
 
 ## Diagram of the infrastructure:
-![image](https://github.com/Dimon7128/ESC_Project/assets/96005523/b426061f-c7b4-40ad-ac55-2183dbc2b488)
+![Hello drawio](https://github.com/Dimon7128/ESC_Project/assets/96005523/e247b4eb-9bd0-4ada-9096-d2f2f635e8ee)
 
 ## Prerequisites
 
