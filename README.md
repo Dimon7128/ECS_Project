@@ -30,6 +30,8 @@ Before running this Terraform project, ensure that you have the following:
 - Adequate permissions to create the resources defined in the Terraform configurations
 - Amazon Route 53 Hosted Zone
 - Private ECR repository
+- Domain.
+
 ## Lambda Function:
 1. Navigate to the directory where you want to clone the repository.
 2. Run the git clone command with the URL of the repository:
