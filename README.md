@@ -93,6 +93,6 @@ terraform apply
   - `rds/` - Provisions RDS instances and related configurations.
   - `vpc/` - Sets up the VPC, including subnets, route tables, and internet gateways.
 - `outputs.tf` - Defines outputs after the Terraform apply is complete.
-- 'terraform.tfvars' - Dynamic var file for the terraform setup
+- `terraform.tfvars` - Dynamic var file for the terraform setup
 - `README.md` - Provides information about the project and setup instructions.
 
