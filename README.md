@@ -36,7 +36,7 @@ Before running this Terraform project, ensure that you have the following:
 1. Navigate to the directory where you want to clone the repository.
 2. Run the git clone command with the URL of the repository:
 ```markdown
-git clone [https://github.com/Dimon7128/services.git](https://github.com/Dimon7128/services.git)
+[git clone [https://github.com/Dimon7128/services.git](https://github.com/Dimon7128/services.git)](https://github.com/Dimon7128/services.git)
 ```
 3. Upload the lambda_function.zip to s3 bucket.
 ```markdown
