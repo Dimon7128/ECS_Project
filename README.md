@@ -1,4 +1,4 @@
-# ESC_Project
+# ECS_Project
 
 # AWS Infrastructure Provisioning with Terraform
 
